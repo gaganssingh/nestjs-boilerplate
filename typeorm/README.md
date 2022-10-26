@@ -2,6 +2,7 @@
 
 - TypeORM
 - PostgreSQL
+- Authentication using JWTs
 
 #### Todo:
 

@@ -29,7 +29,7 @@
     "db:test:rm": "docker-compose rm test_db -s -f -v",
     "db:test:restart": "npm run db:test:rm && npm run db:test:up",
     "pretest:e2e": "npm run db:test:restart",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json --maxWorkers=1 --no-cache"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
@@ -79,6 +79,9 @@
     "typescript": "^4.7.4"
   },
   "jest": {
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
+    },
     "moduleFileExtensions": [
       "js",
       "json",

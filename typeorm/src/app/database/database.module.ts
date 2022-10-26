@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/modules/users/entities';
+import { User } from '../../modules/users/entities';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { User } from 'src/modules/users/entities';
         database: configService.get('DB_DATABASE'),
         entities: [User],
         synchronize: process.env.NODE_ENV !== 'production',
-        // logging: true,
+        logging: process.env.NODE_ENV === 'development',
       }),
     }),
   ],
