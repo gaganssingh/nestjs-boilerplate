@@ -16,7 +16,7 @@ export class UsersService {
     private readonly usersRepo: Repository<User>,
   ) {}
 
-  async findById(id: string): Promise<User> {
+  async findById(id: string): Promise<User | null> {
     return this.usersRepo.findOne({ where: { id } });
   }
 
@@ -41,7 +41,7 @@ export class UsersService {
     const user = await this.findById(id);
     if (!user) {
       throw new NotFoundException(
-        `Could not find user with id "${id}"; deletion failed`,
+        `Could not find user with id "${id}"; update failed`,
       );
     }
 
@@ -49,7 +49,7 @@ export class UsersService {
     return await this.usersRepo.save(user);
   }
 
-  public async delete(id: string): Promise<DeleteUser> {
+  public async delete(id: string): Promise<void> {
     // Using usersRepo.delete() with not trigger the User entity hooks to run
     // ❌ return this.usersRepo.delete(id)
 
@@ -67,10 +67,5 @@ export class UsersService {
         `Something went wrong with the server; please try again later`,
       );
     }
-
-    // If deletion was successful:
-    return {
-      message: `Successfully deleted user with id "${id}"`,
-    };
   }
 }

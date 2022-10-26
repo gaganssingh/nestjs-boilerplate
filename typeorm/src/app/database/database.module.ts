@@ -12,7 +12,7 @@ import { User } from '../../modules/users/entities';
         process.env.NODE_ENV === 'test'
           ? (configService: ConfigService) => ({
               type: 'sqlite',
-              database: 'test.sqlite',
+              database: configService.get('DB_DATABASE'),
               autoLoadEntities: true,
               synchronize: true,
               logging: false,
