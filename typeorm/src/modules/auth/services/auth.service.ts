@@ -1,8 +1,10 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
@@ -56,7 +58,7 @@ export class AuthService {
     // Confirm if email already exists
     const existingUser = await this.usersService.findByEmail(email);
     if (existingUser) {
-      throw new BadRequestException(
+      throw new ConflictException(
         `Email "${email}" already in use; please login instead`,
       );
     }
@@ -67,7 +69,6 @@ export class AuthService {
     try {
       const userToSignup = {
         ...signupUserDto,
-        avatar_url: {},
         password: hashedAndSaltedPassword,
       };
       delete userToSignup.confirmPassword;
@@ -75,6 +76,7 @@ export class AuthService {
       // Create the new user in the db
       return await this.usersService.create(userToSignup);
     } catch (err) {
+      console.error(err);
       throw new InternalServerErrorException(
         'Something went wrong with the server, please try again later',
       );
@@ -99,7 +101,7 @@ export class AuthService {
       user.password,
     );
     if (!doPasswordsMatch) {
-      throw new BadRequestException(
+      throw new UnauthorizedException(
         `Invalid credentials provided; please try again`,
       );
     }

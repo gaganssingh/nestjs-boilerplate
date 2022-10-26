@@ -9,7 +9,8 @@ import { configValidationSchema } from '../utils';
       envFilePath:
         process.env.NODE_ENV === 'development' ? '.env.dev' : '.env.test',
       ignoreEnvFile: process.env.NODE_ENV === 'production',
-      validationSchema: configValidationSchema,
+      validationSchema:
+        process.env.NODE_ENV !== 'test' && configValidationSchema,
     }),
   ],
 })
