@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  dev_db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=dev-db
+    ports:
+      - '5432:5432'
+    restart: always
+    networks:
+      - db
+  test_db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=test-db
+    ports:
+      - '5435:5432'
+    restart: always
+    networks:
+      - db
+networks:
+  db:
