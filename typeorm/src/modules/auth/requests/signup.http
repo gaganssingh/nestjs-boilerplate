@@ -1,0 +1,95 @@
+### ✅ WORKS
+POST http://localhost:3500/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "test@email.com",
+  "password": "Pa$$1234",
+  "confirmPassword": "Pa$$1234",
+  "firstName": "Gagan",
+  "lastName": "Singh"
+}
+
+### ❌ DOES NOT WORK (VIOLATES POSTGRESQL UNIQUE CONSTRAIN)
+POST http://localhost:3500/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "test@email.com",
+  "password": "Pa$$1234",
+  "confirmPassword": "Pa$$1234",
+  "firstName": "Gagan",
+  "lastName": "Singh"
+}
+
+### ❌ DOES NOT WORK (INVALID EMAIL)
+POST http://localhost:3500/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "email.com",
+  "password": "Pa$$1234",
+  "confirmPassword": "Pa$$1234",
+  "firstName": "Gagan",
+  "lastName": "Singh"
+}
+
+### ❌ DOES NOT WORK (SHORT PASSWORD)
+POST http://localhost:3500/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "test2@email.com",
+  "password": "Pa",
+  "confirmPassword": "Pa",
+  "firstName": "Gagan",
+  "lastName": "Singh"
+}
+
+### ❌ DOES NOT WORK (INVALID PASSWORD - NO SPECIAL CHARS)
+POST http://localhost:3500/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "test2@email.com",
+  "password": "Password",
+  "confirmPassword": "Password",
+  "firstName": "Gagan",
+  "lastName": "Singh"
+}
+
+### ❌ DOES NOT WORK (INVALID PASSWORD - PWDs DONT MATCH)
+POST http://localhost:3500/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "test2@email.com",
+  "password": "Pa$$1234",
+  "confirmPassword": "not-matching",
+  "firstName": "Gagan",
+  "lastName": "Singh"
+}
+
+### ❌ DOES NOT WORK (MISSING REQ. FIELD)
+POST http://localhost:3500/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "test2@email.com",
+  "password": "Pa$$1234",
+  "confirmPassword": "not-matching",
+
+  "lastName": "Singh"
+}
+
+### ❌ DOES NOT WORK (MISSING REQ. FIELD)
+POST http://localhost:3500/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "test2@email.com",
+  "password": "Pa$$1234",
+  "confirmPassword": "not-matching",
+  "firstName": "Gagan"
+
+}

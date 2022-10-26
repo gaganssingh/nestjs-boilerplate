@@ -1,26 +1,76 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from '../dtos/create-user.dto';
-import { UpdateUserDto } from '../dtos/update-user.dto';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateUserDto, UpdateUserDto } from '../dtos';
+import { User } from '../entities';
+import { DeleteUser } from '../interfaces';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepo: Repository<User>,
+  ) {}
+
+  async findById(id: string): Promise<User> {
+    return this.usersRepo.findOne({ where: { id } });
   }
 
-  findAll() {
-    return `This action returns all users`;
+  public async findByEmail(email: string): Promise<User | null> {
+    return this.usersRepo.findOne({ where: { email } });
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} user`;
+  public async findAll(): Promise<User[]> {
+    return this.usersRepo.find();
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  public async create(createUserDto: CreateUserDto): Promise<User> {
+    const user = await this.usersRepo.create(createUserDto);
+    return await this.usersRepo.save(user);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  public async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    // Using usersRepo.update() with not trigger the Entity hooks to run
+    // ❌ return this.usersRepo.update(id, updateUserDto)
+
+    // ✅ so using .save() instead
+    const user = await this.findById(id);
+    if (!user) {
+      throw new NotFoundException(
+        `Could not find user with id "${id}"; deletion failed`,
+      );
+    }
+
+    Object.assign(user, { ...updateUserDto });
+    return await this.usersRepo.save(user);
+  }
+
+  public async delete(id: string): Promise<DeleteUser> {
+    // Using usersRepo.delete() with not trigger the User entity hooks to run
+    // ❌ return this.usersRepo.delete(id)
+
+    // ✅ so using .remove() instead
+    const user = await this.findById(id);
+    if (!user) {
+      throw new NotFoundException(
+        `Could not find user with id "${id}"; deletion failed`,
+      );
+    }
+
+    const deletedUser = await this.usersRepo.remove(user);
+    if (!deletedUser) {
+      throw new InternalServerErrorException(
+        `Something went wrong with the server; please try again later`,
+      );
+    }
+
+    // If deletion was successful:
+    return {
+      message: `Successfully deleted user with id "${id}"`,
+    };
   }
 }

@@ -1,0 +1,26 @@
+### ✅ WORKS
+POST http://localhost:3500/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@email.com",
+  "password": "Pa$$1234"
+}
+
+### ❌ DOES NOT WORK (INVALID EMAIL)
+POST http://localhost:3500/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "email.com",
+  "password": "Pa$$1234"
+}
+
+### ❌ DOES NOT WORK (INVALID EMAIL)
+POST http://localhost:3500/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@email.com",
+  "password": "invalid"
+}
