@@ -92,6 +92,23 @@ describe('[Auth (e2e)]', () => {
     expect(body.id).toBeDefined();
   });
 
+  it('automatically assigns the default user role of "USER" to a newly created user', async () => {
+    const signupUserDto = {
+      email: 't@t.com',
+      password: 'Pa$$1234',
+      confirmPassword: 'Pa$$1234',
+      firstName: 'Test',
+      lastName: 'Name',
+    };
+
+    const { body } = await request(app.getHttpServer())
+      .post(SIGNUP_URL)
+      .send(signupUserDto)
+      .expect(201);
+    expect(body.role).toBeDefined();
+    expect(body.role).toBe('USER');
+  });
+
   it('should not return the password in the response', async () => {
     const signupUserDto = {
       email: 't@t.com',

@@ -54,6 +54,12 @@ describe('[Find all users] (e2e)', () => {
     expect(body[0].email).toEqual(signupUserDtoArray[0].email);
     expect(body[0].firstName).toEqual(signupUserDtoArray[0].firstName);
     expect(body[0].lastName).toEqual(signupUserDtoArray[0].lastName);
+    expect(body[0].role).toEqual('USER');
+
+    expect(body[1].email).toEqual(signupUserDtoArray[1].email);
+    expect(body[1].firstName).toEqual(signupUserDtoArray[1].firstName);
+    expect(body[1].lastName).toEqual(signupUserDtoArray[1].lastName);
+    expect(body[1].role).toEqual('USER');
   });
 
   it('excludes user passwords in the response object', async () => {
